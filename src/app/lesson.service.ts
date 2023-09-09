@@ -9,7 +9,7 @@ import { MessageService } from './message.service';
 
 @Injectable({ providedIn: 'root' })
 export class LessonService {
-  private lessonsUrl = 'api/lessons'; // URL to web api
+  private lessonsUrl = 'http://localhost:8080'; // URL to web api
 
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -22,12 +22,11 @@ export class LessonService {
 
   /** GET lessons from the server */
   getLessons(): Observable<Lesson[]> {
-    return this.http.get<Lesson[]>(this.lessonsUrl).pipe(
+    return this.http.post<Lesson[]>(`${this.lessonsUrl}/classGetAll`, {}).pipe(
       tap((_) => this.log('fetched lessons')),
       catchError(this.handleError<Lesson[]>('getLessons', []))
     );
   }
-
   /** GET lesson by id. Return `undefined` when id not found */
   getLessonNo404<Data>(id: number): Observable<Lesson> {
     const url = `${this.lessonsUrl}/?id=${id}`;
@@ -42,12 +41,14 @@ export class LessonService {
   }
 
   /** GET lesson by id. Will 404 if id not found */
-  getLesson(id: number): Observable<Lesson> {
-    const url = `${this.lessonsUrl}/${id}`;
-    return this.http.get<Lesson>(url).pipe(
-      tap((_) => this.log(`fetched lesson id=${id}`)),
-      catchError(this.handleError<Lesson>(`getLesson id=${id}`))
-    );
+  getLesson(id: string): Observable<Lesson> {
+    // const url = `${this.lessonsUrl}/${id}`;
+    return this.http
+      .post<Lesson>(this.lessonsUrl + '/classFindById', { id: id })
+      .pipe(
+        tap((_) => this.log(`fetched lesson id=${id}`)),
+        catchError(this.handleError<Lesson>(`getLesson id=${id}`))
+      );
   }
 
   /* GET lessons whose name contains search term */
@@ -81,7 +82,7 @@ export class LessonService {
   }
 
   /** DELETE: delete the lesson from the server */
-  deleteLesson(id: number): Observable<Lesson> {
+  deleteLesson(id: string): Observable<Lesson> {
     const url = `${this.lessonsUrl}/${id}`;
 
     return this.http.delete<Lesson>(url, this.httpOptions).pipe(

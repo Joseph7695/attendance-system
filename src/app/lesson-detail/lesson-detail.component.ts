@@ -4,6 +4,7 @@ import { Location } from '@angular/common';
 
 import { Lesson } from '../lesson';
 import { LessonService } from '../lesson.service';
+import { Student } from '../student';
 
 @Component({
   selector: 'app-lesson-detail',
@@ -12,6 +13,7 @@ import { LessonService } from '../lesson.service';
 })
 export class LessonDetailComponent implements OnInit {
   lesson: Lesson | undefined;
+  attendingStudents: Student[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -23,11 +25,29 @@ export class LessonDetailComponent implements OnInit {
     this.getLesson();
   }
 
+  attendLesson(student: Student): void {
+    if (this.attendingStudents.find((x) => student)) {
+      console.log(true);
+    } else {
+      this.attendingStudents.push(student);
+      console.log(false);
+    }
+  }
+
+  unattendLesson(student: Student): void {
+    let index = this.attendingStudents.findIndex((x) => student);
+    if (index > -1) {
+      this.attendingStudents.splice(index, 1);
+    }
+  }
+
   getLesson(): void {
-    const id = parseInt(this.route.snapshot.paramMap.get('id')!, 10);
-    this.lessonService
-      .getLesson(id)
-      .subscribe((lesson) => (this.lesson = lesson));
+    // const id = parseInt(this.route.snapshot.paramMap.get('id')!, 10);
+    const id: string = this.route.snapshot.paramMap.get('id') ?? '';
+    this.lessonService.getLesson(id).subscribe((lesson) => {
+      console.log(lesson);
+      this.lesson = lesson;
+    });
   }
 
   goBack(): void {
@@ -41,4 +61,6 @@ export class LessonDetailComponent implements OnInit {
         .subscribe(() => this.goBack());
     }
   }
+
+  unregisterStudent(student: Student): void {}
 }

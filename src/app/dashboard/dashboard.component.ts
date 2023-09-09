@@ -17,8 +17,9 @@ export class DashboardComponent implements OnInit {
   }
 
   getLessons(): void {
-    this.lessonService
-      .getLessons()
-      .subscribe((lessons) => (this.lessons = lessons.slice(1, 5)));
+    this.lessonService.getLessons().subscribe((lessons) => {
+      console.log(lessons);
+      this.lessons = lessons.slice(0, 5);
+    });
   }
 }

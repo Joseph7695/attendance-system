@@ -1,4 +1,11 @@
+import { Student } from './student';
+
 export interface Lesson {
-  id: number;
+  id: string;
   name: string;
+  students: Student[];
 }
+
+// export interface Lesson_Student {
+
+// }

@@ -4,6 +4,17 @@
   <div>
     <label for="lesson-name">Lesson name: </label>
     <input id="lesson-name" [(ngModel)]="lesson.name" placeholder="Lesson name"/>
+    <ul class="lessons">
+      <li *ngFor="let student of lesson.students">
+        <a routerLink="/students/detail/{{student.id}}">
+          <span class="badge">{{student.fullName}}</span>
+        </a>
+        <button [disabled]="attendingStudents.includes(student)" type="button" class="delete" title="attend lesson" (click)="attendLesson(student)">Attend</button>
+        <button [disabled]="!attendingStudents.includes(student)"  type="button" class="delete" title="unattend lesson" (click)="unattendLesson(student)">Unattend</button>
+        <button type="button" class="delete" title="unregister lesson" (click)="unregisterStudent(student)">x</button>
+      </li>
+    </ul>
+
   </div>
   <button type="button" (click)="goBack()">go back</button>
   <button type="button" (click)="save()">save</button>

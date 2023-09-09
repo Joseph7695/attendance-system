@@ -11,6 +11,8 @@ import { LessonDetailComponent } from './lesson-detail/lesson-detail.component';
 import { LessonsComponent } from './lessons/lessons.component';
 import { LessonSearchComponent } from './lesson-search/lesson-search.component';
 import { MessagesComponent } from './messages/messages.component';
+import { StudentListComponent } from './student-list/student-list.component';
+import { StudentDetailComponent } from './student-detail/student-detail.component';
 
 @NgModule({
   imports: [
@@ -33,6 +35,8 @@ import { MessagesComponent } from './messages/messages.component';
     LessonDetailComponent,
     MessagesComponent,
     LessonSearchComponent,
+    StudentListComponent,
+    StudentDetailComponent,
   ],
   bootstrap: [AppComponent],
 })
