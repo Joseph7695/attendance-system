@@ -1,0 +1,21 @@
+<h2>My Lessons</h2>
+
+<div>
+  <label for="new-lesson">Lesson name: </label>
+  <input id="new-lesson" #lessonName />
+
+  <!-- (click) passes input value to add() and then clears the input -->
+  <button type="button" class="add-button" (click)="add(lessonName.value); lessonName.value=''">
+    Add lesson
+  </button>
+</div>
+
+<ul class="lessons">
+  <li *ngFor="let lesson of lessons">
+    <a routerLink="/detail/{{lesson.id}}">
+      <span class="badge">{{lesson.id}}</span> {{lesson.name}}
+    </a>
+    <button type="button" class="delete" title="delete lesson"
+      (click)="delete(lesson)">x</button>
+  </li>
+</ul>

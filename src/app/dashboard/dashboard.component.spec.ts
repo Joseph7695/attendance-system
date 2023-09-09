@@ -1,31 +1,27 @@
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
-import {RouterModule} from '@angular/router';
-import {of} from 'rxjs';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { RouterModule } from '@angular/router';
+import { of } from 'rxjs';
 
-import {HeroSearchComponent} from '../hero-search/hero-search.component';
-import {HeroService} from '../hero.service';
-import {HEROES} from '../mock-heroes';
+import { LessonSearchComponent } from '../lesson-search/lesson-search.component';
+import { LessonService } from '../lesson.service';
+import { HEROES } from '../mock-lessons';
 
-import {DashboardComponent} from './dashboard.component';
+import { DashboardComponent } from './dashboard.component';
 
 describe('DashboardComponent', () => {
   let component: DashboardComponent;
   let fixture: ComponentFixture<DashboardComponent>;
-  let heroService;
-  let getHeroesSpy: jasmine.Spy;
+  let lessonService;
+  let getLessonsSpy: jasmine.Spy;
 
   beforeEach(waitForAsync(() => {
-    heroService = jasmine.createSpyObj('HeroService', ['getHeroes']);
-    getHeroesSpy = heroService.getHeroes.and.returnValue(of(HEROES));
-    TestBed
-        .configureTestingModule({
-          declarations: [DashboardComponent, HeroSearchComponent],
-          imports: [RouterModule.forRoot([])],
-          providers: [
-            {provide: HeroService, useValue: heroService},
-          ]
-        })
-        .compileComponents();
+    lessonService = jasmine.createSpyObj('LessonService', ['getLessons']);
+    getLessonsSpy = lessonService.getLessons.and.returnValue(of(HEROES));
+    TestBed.configureTestingModule({
+      declarations: [DashboardComponent, LessonSearchComponent],
+      imports: [RouterModule.forRoot([])],
+      providers: [{ provide: LessonService, useValue: lessonService }],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(DashboardComponent);
     component = fixture.componentInstance;
@@ -36,15 +32,17 @@ describe('DashboardComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should display "Top Heroes" as headline', () => {
-    expect(fixture.nativeElement.querySelector('h2').textContent).toEqual('Top Heroes');
+  it('should display "Top Lessons" as headline', () => {
+    expect(fixture.nativeElement.querySelector('h2').textContent).toEqual(
+      'Top Lessons'
+    );
   });
 
-  it('should call heroService', waitForAsync(() => {
-       expect(getHeroesSpy.calls.any()).toBe(true);
-     }));
+  it('should call lessonService', waitForAsync(() => {
+    expect(getLessonsSpy.calls.any()).toBe(true);
+  }));
 
   it('should display 4 links', waitForAsync(() => {
-       expect(fixture.nativeElement.querySelectorAll('a').length).toEqual(4);
-     }));
+    expect(fixture.nativeElement.querySelectorAll('a').length).toEqual(4);
+  }));
 });

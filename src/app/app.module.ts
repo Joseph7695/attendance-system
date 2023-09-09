@@ -7,9 +7,9 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { HeroDetailComponent } from './hero-detail/hero-detail.component';
-import { HeroesComponent } from './heroes/heroes.component';
-import { HeroSearchComponent } from './hero-search/hero-search.component';
+import { LessonDetailComponent } from './lesson-detail/lesson-detail.component';
+import { LessonsComponent } from './lessons/lessons.component';
+import { LessonSearchComponent } from './lesson-search/lesson-search.component';
 import { MessagesComponent } from './messages/messages.component';
 
 @NgModule({
@@ -29,10 +29,10 @@ import { MessagesComponent } from './messages/messages.component';
   declarations: [
     AppComponent,
     DashboardComponent,
-    HeroesComponent,
-    HeroDetailComponent,
+    LessonsComponent,
+    LessonDetailComponent,
     MessagesComponent,
-    HeroSearchComponent,
+    LessonSearchComponent,
   ],
   bootstrap: [AppComponent],
 })
