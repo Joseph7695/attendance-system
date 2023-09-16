@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 
 import { Lesson } from '../lesson';
-import { LessonService } from '../lesson.service';
+import { LessonService } from '../services/lesson.service';
 import { Student } from '../student';
 
 @Component({
@@ -26,7 +26,7 @@ export class LessonDetailComponent implements OnInit {
   }
 
   attendLesson(student: Student): void {
-    if (this.attendingStudents.find((x) => student)) {
+    if (this.attendingStudents.find((x) => x.id == student.id)) {
       console.log(true);
     } else {
       this.attendingStudents.push(student);
@@ -35,7 +35,7 @@ export class LessonDetailComponent implements OnInit {
   }
 
   unattendLesson(student: Student): void {
-    let index = this.attendingStudents.findIndex((x) => student);
+    let index = this.attendingStudents.findIndex((x) => x.id == student.id);
     if (index > -1) {
       this.attendingStudents.splice(index, 1);
     }
@@ -52,6 +52,19 @@ export class LessonDetailComponent implements OnInit {
 
   goBack(): void {
     this.location.back();
+  }
+  saveAttendance(): void {
+    if (this.lesson) {
+      this.lessonService
+        .updateLessonAttendance(
+          this.lesson.id,
+          this.attendingStudents.map((x) => x.id)
+        )
+        .subscribe(() => {
+          console.log('Successfully attended');
+          this.attendingStudents.length = 0;
+        });
+    }
   }
 
   save(): void {

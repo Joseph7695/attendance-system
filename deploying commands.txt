@@ -1,0 +1,2 @@
+ng build --base-href=https://Joseph7695.github.io/attendance-system/
+npx angular-cli-ghpages --dir=dist/attendance-system/

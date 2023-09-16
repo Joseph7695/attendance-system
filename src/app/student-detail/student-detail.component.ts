@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Student } from '../student';
 import { Location } from '@angular/common';
-import { StudentService } from '../student.service';
+import { PersonService } from '../services/person.service';
 
 @Component({
   selector: 'app-student-detail',
@@ -14,7 +14,7 @@ export class StudentDetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private studentService: StudentService,
+    private studentService: PersonService,
     private location: Location
   ) {}
 

@@ -1,20 +1,63 @@
-<h2>My Students</h2>
+<h2>Students</h2>
 
 <div>
-  <label for="new-lesson">Student name: </label>
-  <input id="new-lesson" #lessonName />
+  <label for="new-student">Student name: </label>
+  <input id="new-student" #lessonName />
 
   <!-- (click) passes input value to add() and then clears the input -->
-  <button type="button" class="add-button" (click)="add(lessonName.value); lessonName.value=''">
+  <button
+    type="button"
+    class="add-button"
+    (click)="add(lessonName.value); lessonName.value = ''"
+  >
     Add student
   </button>
 </div>
 
 <ul class="lessons">
   <li *ngFor="let student of students">
-    <a routerLink="/students/detail/{{student.id}}">
-      <span class="badge">{{student.fullName}}</span>
+    <a routerLink="/students/detail/{{ student.id }}">
+      <span class="badge">{{ student.firstName }}</span>
     </a>
-    <button type="button" class="delete" title="delete student" (click)="delete(student)">x</button>
+    <button
+      type="button"
+      class="delete"
+      title="delete student"
+      (click)="delete(student)"
+    >
+      x
+    </button>
+  </li>
+</ul>
+
+<h2>Teachers</h2>
+
+<div>
+  <label for="new-teacher">Teacher name: </label>
+  <input id="new-teacher" #teacherName />
+
+  <!-- (click) passes input value to add() and then clears the input -->
+  <button
+    type="button"
+    class="add-button"
+    (click)="addTeacher(teacherName.value); teacherName.value = ''"
+  >
+    Add teacher
+  </button>
+</div>
+
+<ul class="lessons">
+  <li *ngFor="let teacher of teachers">
+    <a routerLink="/teachers/detail/{{ teacher.id }}">
+      <span class="badge">{{ teacher.firstName }}</span>
+    </a>
+    <button
+      type="button"
+      class="delete"
+      title="delete teacher"
+      (click)="delete(teacher)"
+    >
+      x
+    </button>
   </li>
 </ul>

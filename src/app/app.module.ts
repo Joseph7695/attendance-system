@@ -13,6 +13,8 @@ import { LessonSearchComponent } from './lesson-search/lesson-search.component';
 import { MessagesComponent } from './messages/messages.component';
 import { StudentListComponent } from './student-list/student-list.component';
 import { StudentDetailComponent } from './student-detail/student-detail.component';
+import { LoadingComponent } from './loading/loading.component';
+import { httpInterceptorProviders } from './http-interceptors';
 
 @NgModule({
   imports: [
@@ -37,7 +39,9 @@ import { StudentDetailComponent } from './student-detail/student-detail.componen
     LessonSearchComponent,
     StudentListComponent,
     StudentDetailComponent,
+    LoadingComponent,
   ],
   bootstrap: [AppComponent],
+  providers: [httpInterceptorProviders],
 })
 export class AppModule {}

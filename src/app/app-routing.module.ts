@@ -6,9 +6,11 @@ import { LessonsComponent } from './lessons/lessons.component';
 import { LessonDetailComponent } from './lesson-detail/lesson-detail.component';
 import { StudentListComponent } from './student-list/student-list.component';
 import { StudentDetailComponent } from './student-detail/student-detail.component';
+import { LoadingComponent } from './loading/loading.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+  { path: 'loading', component: LoadingComponent },
   { path: 'dashboard', component: DashboardComponent },
   { path: 'lessons/detail/:id', component: LessonDetailComponent },
   { path: 'lessons', component: LessonsComponent },

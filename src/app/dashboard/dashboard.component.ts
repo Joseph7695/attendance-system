@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Lesson } from '../lesson';
-import { LessonService } from '../lesson.service';
+import { LessonService } from '../services/lesson.service';
 
 @Component({
   selector: 'app-dashboard',

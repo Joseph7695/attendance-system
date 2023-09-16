@@ -1,21 +1,53 @@
-<h2>My Lessons</h2>
-
-<div>
-  <label for="new-lesson">Lesson name: </label>
-  <input id="new-lesson" #lessonName />
-
-  <!-- (click) passes input value to add() and then clears the input -->
-  <button type="button" class="add-button" (click)="add(lessonName.value); lessonName.value=''">
-    Add lesson
-  </button>
-</div>
-
+<h2>Lessons</h2>
 <ul class="lessons">
   <li *ngFor="let lesson of lessons">
-    <a routerLink="/lessons/detail/{{lesson.id}}">
-      <span class="badge">{{lesson.name}}</span>
+    <a routerLink="/lessons/detail/{{ lesson.id }}">
+      <span class="badge">{{ lesson.name }}</span>
     </a>
-    <button type="button" class="delete" title="delete lesson"
-      (click)="delete(lesson)">x</button>
+    <button
+      type="button"
+      class="delete"
+      title="delete lesson"
+      (click)="delete(lesson)"
+    >
+      x
+    </button>
   </li>
 </ul>
+
+<div class="create-lesson-box">
+  <label for="new-lesson">Lesson name: </label>
+  <input [(ngModel)]="newLesson.name" />
+  <div>
+    <label for="new-lesson">Teacher: </label>
+    <div class="person-selection-box">
+      <div
+        *ngFor="let teacher of teachers"
+        class="teacher-selection"
+        [class]="selectedPersons.includes(teacher) ? 'selected' : ''"
+        (click)="personClicked(teacher)"
+      >
+        <!-- <input [value]="teacher.id" type="checkbox" /> -->
+        <label>{{ teacher.firstName }}</label>
+      </div>
+    </div>
+  </div>
+  <div>
+    <label for="new-lesson">Student: </label>
+    <div class="person-selection-box">
+      <div
+        *ngFor="let student of students"
+        class="teacher-selection"
+        [class]="selectedPersons.includes(student) ? 'selected' : ''"
+        (click)="personClicked(student)"
+      >
+        <!-- <input [value]="student.id" type="checkbox" /> -->
+        <label>{{ student.firstName }}</label>
+      </div>
+    </div>
+  </div>
+
+  <button type="button" class="add-button" (click)="createLesson()">
+    Create lesson
+  </button>
+</div>

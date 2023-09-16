@@ -5,7 +5,7 @@ import { Observable, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 
 import { Lesson } from '../lesson';
-import { LessonService } from '../lesson.service';
+import { LessonService } from '../services/lesson.service';
 
 @Component({
   selector: 'app-lesson-search',

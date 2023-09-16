@@ -88,3 +88,25 @@ button.delete:hover {
   background-color: #525252;
   color: white;
 }
+
+.create-lesson-box{
+  padding: 5px;
+  border: 1px solid ;
+}
+
+.teacher-selection{
+  display: flex;
+  background-color: red;
+  padding: 12px;
+  flex-direction: row;
+}
+.teacher-selection.selected {
+  background-color: greenyellow;
+
+}
+
+.person-selection-box {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}

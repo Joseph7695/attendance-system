@@ -1,8 +1,8 @@
 <h1>{{title}}</h1>
-<nav>
+<nav *ngIf="router.url !== '/loading'">
   <a routerLink="/dashboard">Dashboard</a>
   <a routerLink="/lessons">Lessons</a>
   <a routerLink="/students">Students</a>
 </nav>
 <router-outlet></router-outlet>
-<app-messages></app-messages>
+<app-messages *ngIf="!environment.production"></app-messages>

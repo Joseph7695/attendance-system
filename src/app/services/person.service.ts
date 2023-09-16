@@ -5,12 +5,11 @@ import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
 import { MessageService } from './message.service';
-import { Student } from './student';
+import { Student, Teacher } from '../student';
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
-export class StudentService {
-  private studentsUrl = 'http://localhost:8080'; // URL to web api
-
+export class PersonService {
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
   };
@@ -21,17 +20,37 @@ export class StudentService {
   ) {}
 
   /** GET students from the server */
+  greeting(): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}/greeting`, {}).pipe(
+      tap((_) => this.log('fetched students')),
+      catchError(this.handleError<any>('getStudents', []))
+    );
+  }
+  /** GET students from the server */
   getStudents(): Observable<Student[]> {
     return this.http
-      .post<Student[]>(`${this.studentsUrl}/studentsGetAll`, {})
+      .post<Student[]>(`${environment.apiUrl}/person/searchPerson`, {
+        personType: 'STUDENT',
+      })
       .pipe(
         tap((_) => this.log('fetched students')),
         catchError(this.handleError<Student[]>('getStudents', []))
       );
   }
+  /** GET students from the server */
+  getTeachers(): Observable<Teacher[]> {
+    return this.http
+      .post<Teacher[]>(`${environment.apiUrl}/person/searchPerson`, {
+        personType: 'TEACHER',
+      })
+      .pipe(
+        tap((_) => this.log('fetched students')),
+        catchError(this.handleError<Teacher[]>('getStudents', []))
+      );
+  }
   /** GET student by id. Return `undefined` when id not found */
   getStudentNo404<Data>(id: number): Observable<Student> {
-    const url = `${this.studentsUrl}/?id=${id}`;
+    const url = `${environment.apiUrl}/?id=${id}`;
     return this.http.get<Student[]>(url).pipe(
       map((students) => students[0]), // returns a {0|1} element array
       tap((h) => {
@@ -44,9 +63,9 @@ export class StudentService {
 
   /** GET student by id. Will 404 if id not found */
   getStudent(id: string): Observable<Student> {
-    // const url = `${this.studentsUrl}/${id}`;
+    // const url = `${environment.apiUrl}/${id}`;
     return this.http
-      .post<Student>(this.studentsUrl + '/studentFindById', { id: id })
+      .post<Student>(environment.apiUrl + '/studentFindById', { id: id })
       .pipe(
         tap((_) => this.log(`fetched student id=${id}`)),
         catchError(this.handleError<Student>(`getStudent id=${id}`))
@@ -59,7 +78,7 @@ export class StudentService {
       // if not search term, return empty student array.
       return of([]);
     }
-    return this.http.get<Student[]>(`${this.studentsUrl}/?name=${term}`).pipe(
+    return this.http.get<Student[]>(`${environment.apiUrl}/?name=${term}`).pipe(
       tap((x) =>
         x.length
           ? this.log(`found students matching "${term}"`)
@@ -75,7 +94,7 @@ export class StudentService {
   addStudent(student: Student): Observable<Student> {
     return this.http
       .post<Student>(
-        this.studentsUrl + '/createStudent',
+        environment.apiUrl + '/createPerson',
         student,
         this.httpOptions
       )
@@ -87,9 +106,24 @@ export class StudentService {
       );
   }
 
+  addTeacher(teacher: Teacher): Observable<Teacher> {
+    return this.http
+      .post<Student>(
+        environment.apiUrl + '/createPerson',
+        teacher,
+        this.httpOptions
+      )
+      .pipe(
+        tap((newStudent: Teacher) =>
+          this.log(`added teacher w/ id=${newStudent.id}`)
+        ),
+        catchError(this.handleError<Student>('addTeacher'))
+      );
+  }
+
   /** DELETE: delete the student from the server */
   deleteStudent(id: string): Observable<Student> {
-    const url = `${this.studentsUrl}/${id}`;
+    const url = `${environment.apiUrl}/${id}`;
 
     return this.http.delete<Student>(url, this.httpOptions).pipe(
       tap((_) => this.log(`deleted student id=${id}`)),
@@ -99,7 +133,7 @@ export class StudentService {
 
   /** PUT: update the student on the server */
   updateStudent(student: Student): Observable<any> {
-    return this.http.put(this.studentsUrl, student, this.httpOptions).pipe(
+    return this.http.put(environment.apiUrl, student, this.httpOptions).pipe(
       tap((_) => this.log(`updated student id=${student.id}`)),
       catchError(this.handleError<any>('updateStudent'))
     );

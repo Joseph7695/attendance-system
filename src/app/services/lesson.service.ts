@@ -4,13 +4,12 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
-import { Lesson } from './lesson';
+import { Lesson } from '../lesson';
 import { MessageService } from './message.service';
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class LessonService {
-  private lessonsUrl = 'http://localhost:8080'; // URL to web api
-
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
   };
@@ -22,14 +21,16 @@ export class LessonService {
 
   /** GET lessons from the server */
   getLessons(): Observable<Lesson[]> {
-    return this.http.post<Lesson[]>(`${this.lessonsUrl}/classGetAll`, {}).pipe(
-      tap((_) => this.log('fetched lessons')),
-      catchError(this.handleError<Lesson[]>('getLessons', []))
-    );
+    return this.http
+      .post<Lesson[]>(`${environment.apiUrl}/classGetAll`, {})
+      .pipe(
+        tap((_) => this.log('fetched lessons')),
+        catchError(this.handleError<Lesson[]>('getLessons', []))
+      );
   }
   /** GET lesson by id. Return `undefined` when id not found */
   getLessonNo404<Data>(id: number): Observable<Lesson> {
-    const url = `${this.lessonsUrl}/?id=${id}`;
+    const url = `${environment.apiUrl}/?id=${id}`;
     return this.http.get<Lesson[]>(url).pipe(
       map((lessons) => lessons[0]), // returns a {0|1} element array
       tap((h) => {
@@ -42,9 +43,9 @@ export class LessonService {
 
   /** GET lesson by id. Will 404 if id not found */
   getLesson(id: string): Observable<Lesson> {
-    // const url = `${this.lessonsUrl}/${id}`;
+    // const url = `${environment.apiUrl}/${id}`;
     return this.http
-      .post<Lesson>(this.lessonsUrl + '/classFindById', { id: id })
+      .post<Lesson>(environment.apiUrl + '/classFindById', { id: id })
       .pipe(
         tap((_) => this.log(`fetched lesson id=${id}`)),
         catchError(this.handleError<Lesson>(`getLesson id=${id}`))
@@ -57,7 +58,7 @@ export class LessonService {
       // if not search term, return empty lesson array.
       return of([]);
     }
-    return this.http.get<Lesson[]>(`${this.lessonsUrl}/?name=${term}`).pipe(
+    return this.http.get<Lesson[]>(`${environment.apiUrl}/?name=${term}`).pipe(
       tap((x) =>
         x.length
           ? this.log(`found lessons matching "${term}"`)
@@ -72,7 +73,11 @@ export class LessonService {
   /** POST: add a new lesson to the server */
   addLesson(lesson: Lesson): Observable<Lesson> {
     return this.http
-      .post<Lesson>(this.lessonsUrl, lesson, this.httpOptions)
+      .post<Lesson>(
+        environment.apiUrl + '/createClass',
+        lesson,
+        this.httpOptions
+      )
       .pipe(
         tap((newLesson: Lesson) =>
           this.log(`added lesson w/ id=${newLesson.id}`)
@@ -83,20 +88,34 @@ export class LessonService {
 
   /** DELETE: delete the lesson from the server */
   deleteLesson(id: string): Observable<Lesson> {
-    const url = `${this.lessonsUrl}/${id}`;
+    const url = `${environment.apiUrl}/${id}`;
 
     return this.http.delete<Lesson>(url, this.httpOptions).pipe(
       tap((_) => this.log(`deleted lesson id=${id}`)),
       catchError(this.handleError<Lesson>('deleteLesson'))
     );
   }
+  updateLessonAttendance(id: string, studentIds: string[]) {
+    return this.http
+      .post(
+        environment.apiUrl + '/attendLesson',
+        { classId: id, studentIds },
+        this.httpOptions
+      )
+      .pipe(
+        tap((_) => this.log(`updated lesson id=${id}`)),
+        catchError(this.handleError<any>('updateLesson'))
+      );
+  }
 
   /** PUT: update the lesson on the server */
   updateLesson(lesson: Lesson): Observable<any> {
-    return this.http.put(this.lessonsUrl, lesson, this.httpOptions).pipe(
-      tap((_) => this.log(`updated lesson id=${lesson.id}`)),
-      catchError(this.handleError<any>('updateLesson'))
-    );
+    return this.http
+      .post(environment.apiUrl + '/', lesson, this.httpOptions)
+      .pipe(
+        tap((_) => this.log(`updated lesson id=${lesson.id}`)),
+        catchError(this.handleError<any>('updateLesson'))
+      );
   }
 
   /**
