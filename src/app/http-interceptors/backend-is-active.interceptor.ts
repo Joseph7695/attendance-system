@@ -1,4 +1,3 @@
-import { Injectable, inject } from '@angular/core';
 import {
   HttpRequest,
   HttpHandler,
@@ -6,27 +5,38 @@ import {
   HttpInterceptor,
   HttpErrorResponse,
 } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { Observable, TimeoutError, tap } from 'rxjs';
 import { Router } from '@angular/router';
+import { Inject, inject, Injectable, InjectionToken } from '@angular/core';
+import { timeout } from 'rxjs/operators';
 
+export const DEFAULT_TIMEOUT = new InjectionToken<number>('defaultTimeout');
 @Injectable()
 export class BackendIsActiveInterceptor implements HttpInterceptor {
-  constructor() {}
+  constructor(@Inject(DEFAULT_TIMEOUT) protected defaultTimeout: number) {}
   router = inject(Router);
 
   intercept(
     request: HttpRequest<unknown>,
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
-    return next.handle(request).pipe(
-      tap({
-        error: (e) => {
-          console.log('hiiiii', e);
-          if (e instanceof HttpErrorResponse && e.status === 0) {
-            this.router.navigateByUrl('/loading');
-          }
-        },
-      })
-    );
+    const timeoutValue = request.headers.get('timeout') || this.defaultTimeout;
+    const timeoutValueNumeric = Number(timeoutValue);
+    return next
+      .handle(request)
+      .pipe(timeout(timeoutValueNumeric))
+      .pipe(
+        tap({
+          error: (e) => {
+            console.log('hiiiii', e);
+            if (
+              e instanceof TimeoutError ||
+              (e instanceof HttpErrorResponse && e.status === 0)
+            ) {
+              this.router.navigateByUrl('/loading');
+            }
+          },
+        })
+      );
   }
 }
